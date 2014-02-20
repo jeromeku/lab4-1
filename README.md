@@ -160,45 +160,92 @@ var diagonal = d3.svg.diagonal()
 
 ### Tree layout
 
-* Let's use those SVG functions to draw the graph
+* Let's use those SVG functions to draw the [tree](http://mbostock.github.io/d3/talk/20111018/tree.html)
 * But before, generate a tree-layout with the points
-
-* [Example](http://mbostock.github.io/d3/talk/20111018/tree.html)
 
 **Data Structure**
 
-* Let's now use a tree data structure
+* D3 layouts requires some specific data structure. For trees:
 
 ```json
-var data = {
-           "name": "Root",
-           "children": [
-            {
-             "name": "AA",
-             "children": [
-              {"name": "AB", "size": 1, 
-                "children": [
-                {"name": "AAA", "size": 2},
-                {"name": "AAB", "size": 3},
-                {"name": "AAC", "size": 4}
-                  ]},
-              {"name": "C", "size": 5},
-              {"name": "D", "size": 6},
-              {"name": "E", "size": 7}
-             ]
-            }]
-        };
+{
+  "name": "Root",
+  "children": [
+   {
+    "name": "AA",
+    "children": [
+     {"name": "AB", "size": 1, 
+       "children": [
+       {"name": "AAA", "size": 2},
+       {"name": "AAB", "size": 3},
+       {"name": "AAC", "size": 4}
+         ]},
+     {"name": "C", "size": 5},
+     {"name": "D", "size": 6},
+     {"name": "E", "size": 7}
+    ]
+   }]
+ };
 ```
 
-* Layout of the nodes
-* Link the nodes with a SVG line, and then with the `line()` function
-* Use a `diagonal` SVG function instead
-* Animate and map the nodes' circles to nodes attributes
+* Generate the layouts of the nodes
+
+```javascript 
+var tree = d3.layout.tree()
+              .size([300,250]);
+
+var nodes = tree.nodes(data);
+var links = tree.links(nodes);
+```
+
+* Oh wait, didn't we just generate data??
+* Let's bind them to circles!
+
+```javascript 
+var node = svg.selectAll("g.node")
+               .data(nodes)
+               .enter().append("svg:g")
+               .attr("transform", function(d) { return "translate(0, 0)"; }) 
+
+ node.append("svg:circle")
+     .attr("r", function(d) { return d.children ? d.children.length : d.size;})
+     .attr("fill", "steelblue")
+
+ node.transition().duration(1000)
+           .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })  
+```
+
+* Let's now link the nodes with a SVG line, and then with the `line()` function
+
+```javascript 
+var line = svg.selectAll(".line")
+              .data(links)
+              .enter().append("line")
+              .attr("class", "line")
+              .attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", 0)
+
+line.transition().duration(1000)
+              .attr("x1", function(d) { return d.source.x; })
+              .attr("y1", function(d) { return d.source.y; })
+              .attr("x2", function(d) { return d.target.x; })
+              .attr("y2", function(d) { return d.target.y; })
+```
+
+* Better use a `diagonal` SVG function instead
+
+```javascript 
+var link = svg.selectAll(".link")
+              .data(links)
+              .enter().append("svg:path")
+              .attr("class", "link")
+              .attr("d", diagonal)
+```
+
 
 **Vertical/Horizontal tree layout**
 
 * Change both layout and SVG drawing parameters
-* Adjust the node labels
+* Adjust the node labels, show the `d.depth`
 
 **Radial tree layout**
 
