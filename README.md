@@ -85,12 +85,82 @@ function tick(e) {
 * Disable links
 * Show nodes color to reveal categories cluster `d3.selectAll("circle").style("fill", function(d) { return fill(d.cat); })`
 
-### Walkthrough D3 layouts
+### Diving deeper into D3 layouts
 
+* As mentionned earlier, generating the layout is different than drawing it
+* For instance, look at this [tree layout](http://mbostock.github.io/d3/talk/20111018/tree.html)
 
 **Understanding `SVG` shape drawing functions**
 
+* Documentation for all the [SVG shapes](https://github.com/mbostock/d3/wiki/API-Reference#wiki-d3svg-svg) D3 can draw
+* Most of them return `<path>` elements
+
+**Example with a diagonal element*
+
+```javascript
+var svg = d3.select("body").append("svg")
+    .attr("width", 500)
+    .attr("height", 500)
+
+var diagonal = d3.svg.diagonal() 
+    .source({x: 10, y: 10})
+    .target({x: 300, y: 300})
+
+svg.append("path")
+    .attr("fill", "none")
+    .attr("stroke", "steelblue")
+    .attr("d", diagonal)
+```
+
+* As a reminder, a line in SVG
+
+```javascript
+svg.selectAll(".line")
+    .data([{source: {x: 10, y: 10}, target:{x: 300, y: 300}}])
+    .enter().append("line")
+    .attr("stroke", "steelblue")
+    .attr("x1", function(d) { return d.source.x; })
+    .attr("y1", function(d) { return d.source.y; })
+    .attr("x2", function(d) { return d.target.x; })
+    .attr("y2", function(d) { return d.target.y; })
+```
+
+* SVG function to draw a line
+
+```javascript
+var data = [{source: {x: 10, y: 10}, target:{x: 300, y: 300}}];
+
+var line = d3.svg.line()
+            .x(function(d) { return d.x; })
+            .y(function(d) { return d.y; })
+            .interpolate("linear");
+
+svg.append("path")
+        .attr("d", line(d3.values(data[0])))
+        .attr("stroke", "red")
+        .attr("stroke-width", 1)
+        .attr("fill", "none");
+```
+
+* Using the diagonal function
+
+```javascript
+var diagonal = d3.svg.diagonal() 
+       .source(data[0].source)
+       .target(data[0].target)
+
+ svg.append("path")
+     .attr("fill", "none")
+     .attr("stroke", "steelblue")
+     .attr("d", diagonal)
+```
+
+* Makes drawing easier!
+
 ### Tree layout
+
+* Let's use those SVG functions to draw the graph
+* But before, generate a tree-layout with the points
 
 * [Example](http://mbostock.github.io/d3/talk/20111018/tree.html)
 
