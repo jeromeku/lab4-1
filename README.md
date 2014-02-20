@@ -15,8 +15,10 @@ Keep in mind that a layout drawing with D3 can be divided into those two parts:
 ### Force-directed layout
 
 * Some layouts examples have been [presented](http://bl.ocks.org/mbostock/4062045) during the class 
-* Force-directed layout is the starting point of [Homework 2](https://github.com/CS171/HW2)
 * [Documentation](https://github.com/mbostock/d3/wiki/Force-Layout)
+
+Let start with [Homework 2](https://github.com/CS171/HW2)
+* Look at the variations
 
 **Adding more nodes**
 
@@ -59,7 +61,17 @@ Keep in mind that a layout drawing with D3 can be divided into those two parts:
 * [Documentation](https://github.com/mbostock/d3/wiki/Histogram-Layout)
 * [Example](http://bl.ocks.org/mbostock/3048450)
 
+### Nested layout
+
+Nested layouts, they belong to the [hierarchical layouts](https://github.com/mbostock/d3/wiki/Hierarchy-Layout) family
+
+* Treemap
+* Circle packing
+
 ### Breakdown of complex examples
 
+* [Hive plot](http://bost.ocks.org/mike/hive/)
 * [Collision detection](http://mbostock.github.io/d3/talk/20111018/collision.html)
 * [D3.js world map with force layout](http://bl.ocks.org/bycoffe/3230965)
+* [Force directed states](http://mbostock.github.io/d3/talk/20111018/force-states.html)
+* [Collapsible nodes](http://mbostock.github.io/d3/talk/20111116/force-collapsible.html)
