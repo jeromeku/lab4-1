@@ -231,7 +231,7 @@ line.transition().duration(1000)
               .attr("y2", function(d) { return d.target.y; })
 ```
 
-* Better use a `diagonal` SVG function instead
+* Better use a `d3.svg.diagonal()` SVG function as seen before
 
 ```javascript 
 var link = svg.selectAll(".link")
@@ -244,12 +244,44 @@ var link = svg.selectAll(".link")
 
 **Vertical/Horizontal tree layout**
 
-* Change both layout and SVG drawing parameters
+* Change both layout and SVG drawing parameters to make it horizontal
+  * Flip the x and y coordinate for the circle nodes
+  * For the path, it's more tricky
+  * Create an accessor function       
+
+```javascript
+var diagonal_rotated = d3.svg.diagonal().projection(function(d) { return [d.y, d.x]});
+
+link.transition().delay(1000).duration(1000)
+    .attr("d", diagonal_rotated)
+```
+
 * Adjust the node labels, show the `d.depth`
 
 **Radial tree layout**
 
 * Switch to a radial layout
+
+```javascript
+var tree = d3.layout.tree()
+    .size([360, diameter / 2 - 120])
+    .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
+```
+
+* Update the nodes
+
+```javascript
+node
+   .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")";})
+```
+
+* Update the diagonal function
+
+```javascript
+var diagonal = d3.svg.diagonal.radial()
+   .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
+```
+* Implement the transition with the non-radial layout!
 
 ### Pie chart layout
 
