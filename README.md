@@ -298,7 +298,10 @@ var diagonal = d3.svg.diagonal.radial()
 Nested layouts, they belong to the [hierarchical layouts](https://github.com/mbostock/d3/wiki/Hierarchy-Layout) family
 
 * Treemap
+  * [Documentation](https://github.com/mbostock/d3/wiki/Treemap-Layout)
+  * [Example](http://bl.ocks.org/mbostock/4063582)
 * Circle packing
+  * [Example](http://bl.ocks.org/mbostock/4063530) 
 
 ### Breakdown of complex examples
 
@@ -308,3 +311,4 @@ Nested layouts, they belong to the [hierarchical layouts](https://github.com/mbo
 * [D3.js world map with force layout](http://bl.ocks.org/bycoffe/3230965)
 * [Force directed states](http://mbostock.github.io/d3/talk/20111018/force-states.html)
 * [Collapsible nodes](http://mbostock.github.io/d3/talk/20111116/force-collapsible.html)
+* [Chord diagram](http://bl.ocks.org/mbostock/4062006)
