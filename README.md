@@ -142,7 +142,8 @@ svg.append("path")
         .attr("fill", "none");
 ```
 
-* Using the diagonal function
+* Using the diagonal function, but we need to provide it with some data
+* The path generator expects the source and target points of the path
 
 ```javascript
 var diagonal = d3.svg.diagonal() 
@@ -155,7 +156,7 @@ var diagonal = d3.svg.diagonal()
      .attr("d", diagonal)
 ```
 
-* Makes drawing easier!
+* Makes drawing way easier!
 
 ### Tree layout
 
@@ -166,9 +167,42 @@ var diagonal = d3.svg.diagonal()
 
 **Data Structure**
 
+* Let's now use a tree data structure
+
+```json
+var data = {
+           "name": "Root",
+           "children": [
+            {
+             "name": "AA",
+             "children": [
+              {"name": "AB", "size": 1, 
+                "children": [
+                {"name": "AAA", "size": 2},
+                {"name": "AAB", "size": 3},
+                {"name": "AAC", "size": 4}
+                  ]},
+              {"name": "C", "size": 5},
+              {"name": "D", "size": 6},
+              {"name": "E", "size": 7}
+             ]
+            }]
+        };
+```
+
+* Layout of the nodes
+* Link the nodes with a SVG line, and then with the `line()` function
+* Use a `diagonal` SVG function instead
+* Animate and map the nodes' circles to nodes attributes
+
 **Vertical/Horizontal tree layout**
 
+* Change both layout and SVG drawing parameters
+* Adjust the node labels
+
 **Radial tree layout**
+
+* Switch to a radial layout
 
 ### Pie chart layout
 
