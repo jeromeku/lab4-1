@@ -33,7 +33,7 @@ Let's see how a force-layout works in D3.
 
 * To dynamically add new nodes:
   * Update the `graph.nodes` array
-  * Update the `force.nodes()` layout
+  * Update the `force.nodes()` layoutd
   * Re-bind the data and add new circles
 * Let's create new nodes for each mouse move at the [pointer position](https://github.com/mbostock/d3/wiki/Selections#wiki-d3_mouse)
 
@@ -188,6 +188,7 @@ var diagonal = d3.svg.diagonal()
  };
 ```
 
+* Note that the root node is the first node of the data
 * Generate the layouts of the nodes
 
 ```javascript 
@@ -204,10 +205,10 @@ var links = tree.links(nodes);
 ```javascript 
 var node = svg.selectAll("g.node")
                .data(nodes)
-               .enter().append("svg:g")
+               .enter().append("g")
                .attr("transform", function(d) { return "translate(0, 0)"; }) 
 
- node.append("svg:circle")
+ node.append("circle")
      .attr("r", function(d) { return d.children ? d.children.length : d.size;})
      .attr("fill", "steelblue")
 
@@ -236,7 +237,7 @@ line.transition().duration(1000)
 ```javascript 
 var link = svg.selectAll(".link")
               .data(links)
-              .enter().append("svg:path")
+              .enter().append("path")
               .attr("class", "link")
               .attr("d", diagonal)
 ```
@@ -281,7 +282,8 @@ node
 var diagonal = d3.svg.diagonal.radial()
    .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 ```
-* Implement the transition with the non-radial layout!
+* Your turn: Implement the transition with the non-radial layout!
+* Test with `d3.layout.cluster()` layout (instead of `d3.layout.tree()`)
 
 ### Pie chart layout
 
@@ -302,6 +304,10 @@ Nested layouts, they belong to the [hierarchical layouts](https://github.com/mbo
   * [Example](http://bl.ocks.org/mbostock/4063582)
 * Circle packing
   * [Example](http://bl.ocks.org/mbostock/4063530) 
+  * [Documentation](https://github.com/mbostock/d3/wiki/Pack-Layout)
+  * To use the `d3.layout.pack()` data need to have a value attribute
+  * Radius of circles can encode various things: depth, .. 
+  * You can make a bubble chart by keeping the leave nodes `.attr("opacity", function(d) { return d.children ? 0 : .2;})`
 
 ### Breakdown of complex examples
 
