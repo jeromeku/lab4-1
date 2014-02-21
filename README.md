@@ -7,7 +7,6 @@ Previously on CS171:
 
 * [Lecture 4](http://cm.dce.harvard.edu/2014/02/24028/L04/screen_H264MultipleHighLTH-16x9.shtml) on visual variables
 * [Lecture 6](http://cm.dce.harvard.edu/2014/02/24028/L06/screen_H264MultipleHighLTH-16x9.shtml) on graph layouts
-* D3's [documentation](https://github.com/mbostock/d3/wiki/Layouts) on layouts
 * [Homework 2](https://github.com/CS171/HW2)
 
 Before getting started, keep in mind drawing layouts with D3 is divided in two parts:
@@ -15,9 +14,13 @@ Before getting started, keep in mind drawing layouts with D3 is divided in two p
 * Layout data creation and binding (e.g. position of the points) with [`d3.layout()`](https://github.com/mbostock/d3/wiki/API-Reference#wiki-d3layout-layouts) functions
 * Using `SVG` element to *visually represent* the layout (often a `<path>` element) with [`d3.svg`](https://github.com/mbostock/d3/wiki/API-Reference#wiki-d3svg-svg) functions
 
+Layouts are very-well documented:
+
+* D3's [documentation](https://github.com/mbostock/d3/wiki/Layouts) on layouts
+
 ### Force-directed layout
 
-* Some layouts examples have been [presented](http://bl.ocks.org/mbostock/4062045) during the class. Look at the end of this document for more sophisticated ones. 
+* Some layouts examples have been [presented](http://bl.ocks.org/mbostock/4062045) during the class. Look at the end of this document for other examples. 
 * Look at the [documentation](https://github.com/mbostock/d3/wiki/Force-Layout) in the D3 wiki
 
 Let's see how a force-layout works in D3. 
@@ -72,15 +75,16 @@ force.stop();
 var foci = [{x: 150, y: 150}, {x: 350, y: 250}, {x: 700, y: 400}];
 
 function tick(e) {
-  var k = .1 * e.alpha;
-  graph.nodes.forEach(function(o, i) {
-    o.x += (foci[o.id%foci.length].x - o.x) * k;
-    o.y += (foci[o.id%foci.length].y - o.y) * k;
+  var k = .2 * e.alpha;
+  graph.nodes.forEach(function(d, i) {
+    d.x += (foci[d.id%foci.length].x - d.x) * k;
+    d.y += (foci[d.id%foci.length].y - d.y) * k;
   });
 
   graph_update(0);
 }
 ```
+* `alpha` is the [cooling parameter\(https://github.com/mbostock/d3/wiki/Force-Layout#wiki-alpha) of the layout
 * Disable links to let nodes propagate correctly
 * Show nodes color to reveal categories cluster `d3.selectAll("circle").style("fill", function(d) { return fill(d.cat); })`
 
