@@ -3,31 +3,30 @@ CS171 - lab 4 - layouts
 
 ### Introduction
 
-Previously in CS171:
+Previously on CS171:
 
 * [Lecture 4](http://cm.dce.harvard.edu/2014/02/24028/L04/screen_H264MultipleHighLTH-16x9.shtml) on visual variables
-* [Lecture 6](http://cm.dce.harvard.edu/2014/02/24028/L06/screen_H264MultipleHighLTH-16x9.shtml) on graphs
+* [Lecture 6](http://cm.dce.harvard.edu/2014/02/24028/L06/screen_H264MultipleHighLTH-16x9.shtml) on graph layouts
 * D3's [documentation](https://github.com/mbostock/d3/wiki/Layouts) on layouts
 * [Homework 2](https://github.com/CS171/HW2)
 
-Keep in mind that a layout drawing with D3 can be divided into those two parts:
+Before getting started, keep in mind drawing layouts with D3 is divided in two parts:
 
-* *Layout-related* data creation and binding (e.g. position of the points) with [`d3.layout()`](https://github.com/mbostock/d3/wiki/API-Reference#wiki-d3layout-layouts) functions
-* `SVG` element drawing (often a `<path>` element) with [`d3.svg`](https://github.com/mbostock/d3/wiki/API-Reference#wiki-d3svg-svg) functions
+* Layout data creation and binding (e.g. position of the points) with [`d3.layout()`](https://github.com/mbostock/d3/wiki/API-Reference#wiki-d3layout-layouts) functions
+* Using `SVG` element to *visually represent* the layout (often a `<path>` element) with [`d3.svg`](https://github.com/mbostock/d3/wiki/API-Reference#wiki-d3svg-svg) functions
 
 ### Force-directed layout
 
 * Some layouts examples have been [presented](http://bl.ocks.org/mbostock/4062045) during the class. Look at the end of this document for more sophisticated ones. 
-* The underlying layout is well [documentated](https://github.com/mbostock/d3/wiki/Force-Layout) in the D3 wiki
+* Look at the [documentation](https://github.com/mbostock/d3/wiki/Force-Layout) in the D3 wiki
 
 Let's see how a force-layout works in D3. 
 * Open [Homework 2](https://github.com/CS171/HW2) code template
 * Look at the design variations
-* Investigate how nodes are created
-  * Nodes `graph.nodes` and `graph.links`
-  * Layout function `d3.layout.force()` applied to the nodes 
-    * By creating `x` and `y` attribuets
-    * And updating them
+* Investigate how nodes `graph.nodes` and `graph.links` are created 
+* Look at the layout function `d3.layout.force()` applied to the nodes 
+  * It creates `x` and `y` attributes (if they don't exist)
+  * And updates them until the simulation reaches a stable state
 
 **Adding more nodes**
 
@@ -35,7 +34,7 @@ Let's see how a force-layout works in D3.
   * Update the `graph.nodes` array
   * Update the `force.nodes()` layoutd
   * Re-bind the data and add new circles
-* Let's create new nodes for each mouse move at the [pointer position](https://github.com/mbostock/d3/wiki/Selections#wiki-d3_mouse)
+* For fun, let's create new nodes for each mouse move at the [pointer position](https://github.com/mbostock/d3/wiki/Selections#wiki-d3_mouse)
 
 ```javascript
 d3.select("svg").on("mousemove", function(d, i) {
@@ -49,7 +48,7 @@ d3.select("svg").on("mousemove", function(d, i) {
 })
 ```
 
-* Color by category `.style("fill", function(d) { return fill(d.cat); })`
+* Color the nodes by category `.style("fill", function(d) { return fill(d.cat); })`
 
 **The `.tick()` function**
 
@@ -67,7 +66,7 @@ force.stop();
 **Layout division into foci**
 
 * The `.tick()` function can also be overrided for custom layouts
-* Example of a muliti-foci layout:
+* Example of a multi-foci layout:
 
 ```javascript
 var foci = [{x: 150, y: 150}, {x: 350, y: 250}, {x: 700, y: 400}];
@@ -82,7 +81,7 @@ function tick(e) {
   graph_update(0);
 }
 ```
-* Disable links
+* Disable links to let nodes propagate correctly
 * Show nodes color to reveal categories cluster `d3.selectAll("circle").style("fill", function(d) { return fill(d.cat); })`
 
 ### Diving deeper into D3 layouts
@@ -94,25 +93,7 @@ function tick(e) {
 
 * Documentation for all the [SVG shapes](https://github.com/mbostock/d3/wiki/API-Reference#wiki-d3svg-svg) D3 can draw
 * Most of them return `<path>` elements
-
-**Example with a diagonal element*
-
-```javascript
-var svg = d3.select("body").append("svg")
-    .attr("width", 500)
-    .attr("height", 500)
-
-var diagonal = d3.svg.diagonal() 
-    .source({x: 10, y: 10})
-    .target({x: 300, y: 300})
-
-svg.append("path")
-    .attr("fill", "none")
-    .attr("stroke", "steelblue")
-    .attr("d", diagonal)
-```
-
-* As a reminder, a line in SVG
+* As a reminder, a line in SVG:
 
 ```javascript
 svg.selectAll(".line")
@@ -125,7 +106,7 @@ svg.selectAll(".line")
     .attr("y2", function(d) { return d.target.y; })
 ```
 
-* SVG function to draw a line
+* Alternatively, using the D# SVG function to draw a line:
 
 ```javascript
 var data = [{source: {x: 10, y: 10}, target:{x: 300, y: 300}}];
@@ -143,7 +124,7 @@ svg.append("path")
 ```
 
 * Using the diagonal function, but we need to provide it with some data
-* The path generator expects the source and target points of the path
+* The path generator expects the source and target points of the point
 
 ```javascript
 var diagonal = d3.svg.diagonal() 
@@ -154,6 +135,17 @@ var diagonal = d3.svg.diagonal()
      .attr("fill", "none")
      .attr("stroke", "steelblue")
      .attr("d", diagonal)
+```
+
+* You can also bind the data
+
+```javascript
+svg.selectAll(".diag").data(data).enter().append("path").attr("class", "diag")
+    .attr("fill", "none")
+    .attr("stroke", "steelblue")
+    .attr("d", function(d) {
+      return diagonal({source: d.source, target: d.target});
+    })
 ```
 
 * Makes drawing way easier!
@@ -307,7 +299,7 @@ Nested layouts, they belong to the [hierarchical layouts](https://github.com/mbo
   * [Documentation](https://github.com/mbostock/d3/wiki/Pack-Layout)
   * To use the `d3.layout.pack()` data need to have a value attribute
   * Radius of circles can encode various things: depth, .. 
-  * You can make a bubble chart by keeping the leave nodes `.attr("opacity", function(d) { return d.children ? 0 : .2;})`
+  * You can make a [bubble chart](http://bl.ocks.org/mbostock/4063269) by keeping the leave nodes `.attr("opacity", function(d) { return d.children ? 0 : .2;})`
 
 ### Breakdown of complex examples
 
