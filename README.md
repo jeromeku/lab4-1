@@ -140,15 +140,13 @@ var diagonal = d3.svg.diagonal()
 * You can also bind the data
 
 ```javascript
+var diagonal = d3.svg.diagonal() 
+
 svg.selectAll(".diag").data(data).enter().append("path").attr("class", "diag")
     .attr("fill", "none")
     .attr("stroke", "steelblue")
-    .attr("d", function(d) {
-      return diagonal({source: d.source, target: d.target});
-    })
+    .attr("d", diagonal)
 ```
-
-* Makes drawing way easier!
 
 ### Tree layout
 
@@ -198,26 +196,20 @@ var links = tree.links(nodes);
 var node = svg.selectAll("g.node")
                .data(nodes)
                .enter().append("g")
-               .attr("transform", function(d) { return "translate(0, 0)"; }) 
+               .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })  
 
  node.append("circle")
      .attr("r", function(d) { return d.children ? d.children.length : d.size;})
      .attr("fill", "steelblue")
-
- node.transition().duration(1000)
-           .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })  
 ```
 
-* Let's now link the nodes with a SVG line, and then with the `line()` function
+* Let's now link the nodes with a SVG line
 
 ```javascript 
 var line = svg.selectAll(".line")
               .data(links)
               .enter().append("line")
               .attr("class", "line")
-              .attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", 0)
-
-line.transition().duration(1000)
               .attr("x1", function(d) { return d.source.x; })
               .attr("y1", function(d) { return d.source.y; })
               .attr("x2", function(d) { return d.target.x; })
@@ -225,6 +217,7 @@ line.transition().duration(1000)
 ```
 
 * Better use a `d3.svg.diagonal()` SVG function as seen before
+* The magic happens within `tree.links(nodes)`
 
 ```javascript 
 var link = svg.selectAll(".link")
@@ -233,7 +226,6 @@ var link = svg.selectAll(".link")
               .attr("class", "link")
               .attr("d", diagonal)
 ```
-
 
 **Vertical/Horizontal tree layout**
 
@@ -253,7 +245,7 @@ link.transition().delay(1000).duration(1000)
 
 **Radial tree layout**
 
-* Switch to a radial layout
+* Switch to a radial layout with a `.separation()`
 
 ```javascript
 var tree = d3.layout.tree()
@@ -261,14 +253,13 @@ var tree = d3.layout.tree()
     .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
 ```
 
-* Update the nodes
+* Update the nodes with a `rotate()` transform
 
 ```javascript
-node
-   .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")";})
+node.attr("transform", function(d) { return "rotate(" + (d.x - 90) + ") translate(" + d.y + ")";})
 ```
 
-* Update the diagonal function
+* Update the diagonal function as well
 
 ```javascript
 var diagonal = d3.svg.diagonal.radial()
