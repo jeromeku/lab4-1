@@ -25,7 +25,7 @@ Layouts are very-well documented:
 
 Let's see how a force-layout works in D3. 
 * Open [Homework 2](https://github.com/CS171/HW2) code template
-* Look at the design variations
+* (Re)-Look at the design variations
 * Investigate how nodes `graph.nodes` and `graph.links` are created 
 * Look at the layout function `d3.layout.force()` applied to the nodes 
   * It creates `x` and `y` attributes (if they don't exist)
@@ -35,7 +35,7 @@ Let's see how a force-layout works in D3.
 
 * To dynamically add new nodes:
   * Update the `graph.nodes` array
-  * Update the `force.nodes()` layoutd
+  * Update the `force.nodes()` layout
   * Re-bind the data and add new circles
 * For fun, let's create new nodes for each mouse move at the [pointer position](https://github.com/mbostock/d3/wiki/Selections#wiki-d3_mouse)
 
@@ -84,7 +84,7 @@ function tick(e) {
   graph_update(0);
 }
 ```
-* `alpha` is the [cooling parameter\(https://github.com/mbostock/d3/wiki/Force-Layout#wiki-alpha) of the layout
+* `alpha` is the [cooling parameter](https://github.com/mbostock/d3/wiki/Force-Layout#wiki-alpha) of the layout
 * Disable links to let nodes propagate correctly
 * Show nodes color to reveal categories cluster `d3.selectAll("circle").style("fill", function(d) { return fill(d.cat); })`
 
@@ -110,7 +110,7 @@ svg.selectAll(".line")
     .attr("y2", function(d) { return d.target.y; })
 ```
 
-* Alternatively, using the D# SVG function to draw a line:
+* Alternatively, using the D3 SVG function to draw a line:
 
 ```javascript
 var data = [{source: {x: 10, y: 10}, target:{x: 300, y: 300}}];
@@ -183,7 +183,7 @@ svg.selectAll(".diag").data(data).enter().append("path").attr("class", "diag")
 ```
 
 * Note that the root node is the first node of the data
-* Generate the layouts of the nodes
+* Let's generate the nodes layout
 
 ```javascript 
 var tree = d3.layout.tree()
