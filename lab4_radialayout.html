@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>CS171 Lab4</title>
+  <script src="http://d3js.org/d3.v3.min.js" type="text/javascript" charset="utf-8"></script>
+  <style>
+    svg {
+        border: solid 1px #ccc;
+        font: 10px sans-serif;
+    }
+
+    .node circle {
+      cursor: pointer;
+      fill: #fff;
+      stroke: steelblue;
+      stroke-width: 1.5px;
+    }
+
+    path.link, line.line {
+      fill: none;
+      stroke: #ccc;
+      stroke-width: 1.5px;
+    }
+
+  </style>
+  </head>
+  <body>
+ 
+    <script type="text/javascript">
+ 
+      var data = {
+                 "name": "Root",
+                 "children": [
+                  {
+                   "name": "AA",
+                   "children": [
+                    {"name": "AB", "size": 1, 
+                      "children": [
+                      {"name": "AAA", "size": 2},
+                      {"name": "AAB", "size": 3},
+                      {"name": "AAC", "size": 4}
+                    ]},
+                    {"name": "C", "size": 5},
+                    {"name": "D", "size": 6},
+                    {"name": "E", "size": 7}
+                   ]
+                  }]
+              };
+ 
+     var svg = d3.select("body").append("svg:svg")
+                  .attr("width", 900)
+                  .attr("height", 900)
+                  .append("svg:g")
+                  .attr("transform", "translate(150, 120)");
+             
+
+      var diameter = 500;
+
+      var tree = d3.layout.tree()
+          .size([360, diameter / 2 - 120])
+          .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
+
+      var diagonal = d3.svg.diagonal.radial()
+          .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
+
+      var nodes = tree.nodes(data);
+      var links = tree.links(nodes);
+  
+      var node = svg.selectAll("g.node")
+                    .data(nodes)
+                    .enter().append("svg:g")
+                    .attr("transform", function(d) { return "translate(0, 0)"; }) 
+ 
+      node.append("svg:circle")
+          .attr("r", function(d) { return d.children ? d.children.length : d.size;})
+          .attr("fill", "steelblue")
+
+      node
+         .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")";})
+ 
+      node.append("svg:text")
+          .attr("dx", function(d) { return d.children ? -12 : 10; })
+          .attr("dy", 0)
+          .text(function(d) { return d.name; })
+
+      var link = svg.selectAll(".link")
+                    .data(links)
+                    .enter().append("svg:path")
+                    .attr("class", "link")
+                    .attr("d", diagonal)
+
+    tree = d3.layout.tree()//.cluster()
+                  .size([300,250]);
+
+    nodes = tree.nodes(data);
+    links = tree.links(nodes);
+
+
+    diagonal = d3.svg.diagonal()
+         .projection(function(d) { return [d.y, d.x]; });
+
+    node
+      .transition().delay(1000).duration(1000)
+     .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })  
+
+      link.transition().delay(1000).duration(1000)
+        .attr("d", diagonal)
+ 
+    </script>
+  </body>
+</html>

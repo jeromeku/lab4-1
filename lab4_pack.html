@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>CS171 Lab4</title>
+  <script src="http://d3js.org/d3.v3.min.js" type="text/javascript" charset="utf-8"></script>
+  <style>
+    svg {
+        border: solid 1px #ccc;
+        font: 10px sans-serif;
+    }
+
+    .node {
+      fill: #fff;
+      stroke: steelblue;
+      stroke-width: 1.5px;
+    }
+
+    text {
+      stroke: white;
+      font: 10px sans-serif;
+    }
+  </style>
+  </head>
+  <body>
+ 
+    <script type="text/javascript">
+ 
+      var data = {
+                 "name": "",
+                 "value": 2,
+                 "children": [
+                  {
+                   "name": "AA",
+                   "value": 2,
+                   "children": [
+                    {"name": "AB", "value": 1, 
+                      "children": [
+                      {"name": "AAA", "value": 2},
+                      {"name": "AAB", "value": 3},
+                      {"name": "AAC", "value": 4}
+                    ]},
+                    {"name": "C", "value": 5},
+                    {"name": "D", "value": 6},
+                    {"name": "E", "value": 7}
+                   ]
+                  }]
+              };
+ 
+
+     var svg = d3.select("body").append("svg:svg")
+                  .attr("width", 900)
+                  .attr("height", 900)
+                  .append("svg:g")
+                  .attr("transform", "translate(150, 120)");
+             
+      var pack = d3.layout.pack()
+          .size([500, 400])
+          .padding(10);
+ 
+      var nodes = pack.nodes(data);
+ 
+      var node = svg.selectAll("g.node")
+                    .data(nodes)
+                  .enter().append("g")
+                    .attr("class", "node")
+                    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })  
+  
+      node.append("circle")
+          .attr("r", function(d) { return d.r;})
+          .attr("opacity", .4)
+          .attr("fill", "steelblue")
+        .transition().delay(1000).duration(1000)
+          .attr("opacity", function(d) { 
+            return d.children ? 0 : .9;
+          });
+
+      node.append("text")
+          .attr("dx", 0)
+          .attr("dy", 0)
+          .text(function(d) { return d.name; })
+        .transition().delay(1000).duration(1000)
+          .attr("opacity", function(d) { return d.children ? 0 : .9;});
+
+    </script>
+  </body>
+</html>

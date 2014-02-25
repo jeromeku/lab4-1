@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>CS171 Lab4</title>
+  <script src="http://d3js.org/d3.v3.min.js" type="text/javascript" charset="utf-8"></script>
+  <style>
+    svg {
+        border: solid 1px #ccc;
+        font: 10px sans-serif;
+    }
+
+    .node circle {
+      cursor: pointer;
+      fill: #fff;
+      stroke: steelblue;
+      stroke-width: 1.5px;
+    }
+
+    path.link, line.line {
+      fill: none;
+      stroke: #ccc;
+      stroke-width: 1.5px;
+    }
+
+  </style>
+  </head>
+  <body>
+ 
+    <script type="text/javascript">
+ 
+      var data = {
+                 "name": "Root",
+                 "children": [
+                  {
+                   "name": "AA",
+                   "children": [
+                    {"name": "AB", "size": 1, 
+                      "children": [
+                      {"name": "AAA", "size": 2},
+                      {"name": "AAB", "size": 3},
+                      {"name": "AAC", "size": 4}
+                        ]},
+                    {"name": "C", "size": 5},
+                    {"name": "D", "size": 6},
+                    {"name": "E", "size": 7}
+                   ]
+                  }]
+              };
+ 
+   var svg = d3.select("body").append("svg:svg")
+                .attr("width", 400)
+                .attr("height", 400)
+                .append("svg:g")
+                .attr("transform", "translate(50, 20)");
+           
+    var tree = d3.layout.tree()
+                  .size([300,250]);
+
+    var nodes = tree.nodes(data);
+    var links = tree.links(nodes);
+    var diagonal = d3.svg.diagonal();
+ 
+
+      var node = svg.selectAll("g.node")
+                    .data(nodes)
+                  .enter().append("svg:g")
+                    .attr("transform", function(d) { return "translate(0, 0)"; }) 
+  
+      node.append("svg:circle")
+          .attr("r", function(d) { return d.children ? d.children.length : d.size;})
+          .attr("fill", "steelblue")
+
+      node.transition().duration(1000)
+          .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+        .transition().delay(1000).duration(1000)
+          .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })  
+
+      node.append("svg:text")
+          .attr("dx", function(d) { return d.children ? -12 : 10; })
+          .attr("dy", 0)
+      //.attr("text-anchor", function(d) { return d.children ? "end" : "start"; })
+      .text(function(d) { return d.name; })
+
+
+ 
+/*
+      var line = svg.selectAll(".line")
+                    .data(links)
+                    .enter().append("line")
+                    .attr("class", "line")
+                    .attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", 0)
+
+      line.transition().duration(1000)
+                    .attr("x1", function(d) { return d.source.x; })
+                    .attr("y1", function(d) { return d.source.y; })
+                    .attr("x2", function(d) { return d.target.x; })
+                    .attr("y2", function(d) { return d.target.y; })
+*/
+ 
+       var diagonal_rotated = d3.svg.diagonal()
+            .projection(function(d) { return [d.y, d.x]});
+
+
+      var link = svg.selectAll(".link")
+                    .data(links)
+                    .enter().append("svg:path")
+                    .attr("class", "link")
+                    .attr("opacity", 0)
+                    .attr("d", diagonal_rotated)
+                    .transition().delay(1000).duration(1000)
+                    .attr("opacity", 1)
+
+
+   //   link.transition().delay(1000).duration(1000)
+    //      .attr("d", diagonal_rotated)
+
+
+    </script>
+  </body>
+</html>

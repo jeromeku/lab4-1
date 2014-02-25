@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>CS171 Lab4</title>
+  <script src="http://d3js.org/d3.v3.min.js" type="text/javascript" charset="utf-8"></script>
+
+  </head>
+  <body>
+
+    <script type="text/javascript">
+
+    var svg = d3.select("body").append("svg")
+                .attr("width", 500)
+                .attr("height", 500)
+
+
+    var data = [{source: {x: 10, y: 10}, target:{x: 300, y: 300}}];
+
+/*
+    svg.selectAll(".line")
+        .data(data)
+        .enter().append("line")
+        .attr("stroke", "steelblue")
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; })
+*/
+
+/*
+  var line = d3.svg.line()
+              .x(function(d) { return d.x; })
+              .y(function(d) { return d.y; })
+              .interpolate("linear");
+
+  svg.append("path")
+          .attr("d", line(d3.values(data[0])))
+          .attr("stroke", "red")
+          .attr("stroke-width", 1)
+          .attr("fill", "none");
+
+   var diagonal = d3.svg.diagonal() 
+          .source(data[0].source)
+          .target(data[0].target)
+
+    svg.append("path")
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("d", diagonal)
+*/
+
+  var diagonal = d3.svg.diagonal();
+
+  svg.selectAll(".diag").data(data).enter().append("path").attr("class", "diag")
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("d", diagonal)
+
+      </script>
+    </body>
+</html>
